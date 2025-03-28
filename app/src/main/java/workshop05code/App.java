@@ -1,12 +1,11 @@
 package workshop05code;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-//Included for the logging exercise
-import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -38,15 +37,19 @@ public class App {
 
         wordleDatabaseConnection.createNewDatabase("words.db");
         if (wordleDatabaseConnection.checkIfConnectionDefined()) {
-            System.out.println("Wordle created and connected.");
+            // System.out.println("Wordle created and connected.");
+            logger.info("Wordle created and connected.");
         } else {
-            System.out.println("Not able to connect. Sorry!");
+            // System.out.println("Not able to connect. Sorry!");
+            logger.severe("Not able to connect. Sorry!");
             return;
         }
         if (wordleDatabaseConnection.createWordleTables()) {
-            System.out.println("Wordle structures in place.");
+            // System.out.println("Wordle structures in place.");
+            logger.info("wordle structures in place.");
         } else {
-            System.out.println("Not able to launch. Sorry!");
+            // System.out.println("Not abl  e to launch. Sorry!");
+            logger.severe("Not abl  e to launch. Sorry!");
             return;
         }
 
@@ -56,14 +59,16 @@ public class App {
             String line;
             int i = 1;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                // System.out.println(line);
+                logger.info("Loading word: " + line);
                 wordleDatabaseConnection.addValidWord(i, line);
                 i++;
             }
 
         } catch (IOException e) {
-            System.out.println("Not able to load . Sorry!");
-            System.out.println(e.getMessage());
+            // System.out.println("Not able to load . Sorry!");
+            // System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "Not able to load data.txt", e);
             return;
         }
 
@@ -74,11 +79,14 @@ public class App {
             String guess = scanner.nextLine();
 
             while (!guess.equals("q")) {
-                System.out.println("You've guessed '" + guess+"'.");
+                // System.out.println("You've guessed '" + guess+"'.");
+                logger.info("User guessed: " + guess);
 
-                if (wordleDatabaseConnection.isValidWord(guess)) { 
+                if (wordleDatabaseConnection.isValidWord(guess)) {
+                    logger.info("Valid guess: " + guess); 
                     System.out.println("Success! It is in the the list.\n");
                 }else{
+                    logger.warning("Invalid guess: " + guess + " (Not in the list)");
                     System.out.println("Sorry. This word is NOT in the the list.\n");
                 }
 
@@ -86,7 +94,8 @@ public class App {
                 guess = scanner.nextLine();
             }
         } catch (NoSuchElementException | IllegalStateException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            logger.log(Level.SEVERE, "Error while reading user input", e);
         }
 
     }
