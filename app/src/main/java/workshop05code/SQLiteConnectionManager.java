@@ -2,7 +2,6 @@ package workshop05code;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.classfile.attribute.StackMapTableAttribute;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -125,14 +124,13 @@ public class SQLiteConnectionManager {
     public void addValidWord(int id, String word) {
 
         // String sql = "INSERT INTO validWords(id,word) VALUES('" + id + "','" + word + "')";
-        String sql = "INSERT INTO validWords(id,word) VALUES(= ? = ?)";
+        String sql = "INSERT INTO validWords(id,word) VALUES(? ?)";
 
         try (Connection conn = DriverManager.getConnection(databaseURL);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
                     pstmt.setInt(1, id);
                     pstmt.setString(2, word);
-
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
